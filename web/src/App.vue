@@ -46,6 +46,35 @@ const showAddTxModal = ref(false)
 const defaultAddTxType = ref<'income' | 'expense'>('expense')
 const showBudgetModal = ref(false)
 const showCategoryModal = ref(false)
+const showOrderCardModal = ref(false)
+const newCardLabel = ref('')
+const newCardMethod = ref<PaymentMethod>('qris')
+const newCardColor = ref('yellow')
+
+function handleOrderCard() {
+  if (!newCardLabel.value.trim()) {
+    showToast('Silakan masukkan nama/label kartu')
+    return
+  }
+  showToast(`✓ Kartu ${newCardLabel.value} berhasil dipesan!`)
+  showOrderCardModal.value = false
+  newCardLabel.value = ''
+}
+
+function toggleDeck() {
+  isDeckExpanded.value = !isDeckExpanded.value
+}
+
+function onTabChange(tab: 'dashboard' | 'transactions' | 'budgets' | 'categories') {
+  activeTab.value = tab
+  if (isDeckExpanded.value) {
+    isDeckExpanded.value = false
+  }
+}
+
+function handleCommunityClick() {
+  showToast('👥 Modul Komunitas & Split-Bill siap dihubungkan!')
+}
 
 // Global notification toast
 const toastMessage = ref<string | null>(null)
@@ -410,7 +439,10 @@ onUnmounted(() => {
         </div>
 
         <!-- Hero Middle: Total Balance & Interactive Cards Stack -->
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+        <div
+          v-if="!isDeckExpanded"
+          class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center animate-in fade-in duration-300"
+        >
           <!-- Total Balance (Left / Main) -->
           <div class="md:col-span-6 space-y-3.5">
             <div class="text-[11px] font-mono font-bold uppercase tracking-widest text-slate-400 flex items-center space-x-2">
@@ -478,6 +510,7 @@ onUnmounted(() => {
           :total-balance="monthlyReport ? monthlyReport.net_cash_flow_idr : 0"
           @select-method="onMethodSelectedFromDeck"
           @close="isDeckExpanded = false"
+          @order-card="showOrderCardModal = true"
         />
 
         <!-- Spending Widget & Category Filter Pills (When deck is not expanded) -->
@@ -537,8 +570,8 @@ onUnmounted(() => {
       <!-- ======================================================== -->
       <section
         :class="[
-          'flex-1 bg-white rounded-t-[32px] sm:rounded-t-[40px] px-4 sm:px-8 pt-6 pb-20 text-slate-800 shadow-2xl flex flex-col transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]',
-          isDeckExpanded ? 'translate-y-8 opacity-25 pointer-events-none' : 'translate-y-0 opacity-100'
+          'flex-1 bg-white rounded-t-[32px] sm:rounded-t-[40px] px-4 sm:px-8 pt-6 pb-24 text-slate-800 shadow-2xl flex flex-col transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]',
+          isDeckExpanded ? 'translate-y-32 opacity-0 max-h-0 overflow-hidden pointer-events-none' : 'translate-y-0 opacity-100'
         ]"
       >
         <!-- Sheet Header Bar -->
@@ -731,9 +764,99 @@ onUnmounted(() => {
     <!-- Floating Bottom Dock Navigation -->
     <BottomDock
       :active-tab="activeTab"
-      @update:active-tab="activeTab = $event"
+      :is-cards-open="isDeckExpanded"
+      @update:active-tab="onTabChange"
+      @toggle-cards="toggleDeck"
       @open-add-modal="openAddExpense"
+      @open-community="handleCommunityClick"
     />
+
+    <!-- Order Card Modal (Vuetify Dialog) -->
+    <v-dialog v-model="showOrderCardModal" max-width="460">
+      <v-card class="bg-[#0f131c] text-white rounded-3xl border border-white/10 p-6 shadow-2xl">
+        <div class="flex items-center justify-between pb-4 border-b border-white/10">
+          <div class="flex items-center space-x-2">
+            <span class="text-xl">💳</span>
+            <span class="font-extrabold text-base tracking-tight">Order a New Card</span>
+          </div>
+          <button @click="showOrderCardModal = false" class="text-slate-400 hover:text-white p-1">✕</button>
+        </div>
+
+        <div class="py-5 space-y-4">
+          <div>
+            <label class="block text-[11px] font-mono uppercase tracking-wider text-slate-400 mb-1.5">
+              Label / Nama Kartu
+            </label>
+            <input
+              v-model="newCardLabel"
+              type="text"
+              placeholder="Contoh: Kartu Belanja BCA / GoPay"
+              class="w-full bg-white/[0.06] border border-white/10 rounded-xl px-4 py-2.5 text-sm font-semibold text-white focus:ring-2 focus:ring-emerald-400 focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-mono uppercase tracking-wider text-slate-400 mb-1.5">
+              Kategori Pembayaran
+            </label>
+            <select
+              v-model="newCardMethod"
+              class="w-full bg-white/[0.06] border border-white/10 rounded-xl px-4 py-2.5 text-sm font-semibold text-white focus:ring-2 focus:ring-emerald-400 focus:outline-none"
+            >
+              <option value="qris" class="bg-slate-900 text-white">QRIS / E-Wallet</option>
+              <option value="cash" class="bg-slate-900 text-white">Uang Tunai</option>
+              <option value="atm" class="bg-slate-900 text-white">Kartu ATM / Debit</option>
+              <option value="transfer" class="bg-slate-900 text-white">Transfer Bank</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-mono uppercase tracking-wider text-slate-400 mb-2">
+              Warna Kartu
+            </label>
+            <div class="flex items-center space-x-3">
+              <button
+                type="button"
+                @click="newCardColor = 'yellow'"
+                :class="['w-9 h-9 rounded-full bg-yellow-400 border-2 transition-all', newCardColor === 'yellow' ? 'border-white scale-110 shadow-lg' : 'border-transparent opacity-70']"
+              ></button>
+              <button
+                type="button"
+                @click="newCardColor = 'teal'"
+                :class="['w-9 h-9 rounded-full bg-teal-400 border-2 transition-all', newCardColor === 'teal' ? 'border-white scale-110 shadow-lg' : 'border-transparent opacity-70']"
+              ></button>
+              <button
+                type="button"
+                @click="newCardColor = 'blue'"
+                :class="['w-9 h-9 rounded-full bg-sky-400 border-2 transition-all', newCardColor === 'blue' ? 'border-white scale-110 shadow-lg' : 'border-transparent opacity-70']"
+              ></button>
+              <button
+                type="button"
+                @click="newCardColor = 'purple'"
+                :class="['w-9 h-9 rounded-full bg-purple-500 border-2 transition-all', newCardColor === 'purple' ? 'border-white scale-110 shadow-lg' : 'border-transparent opacity-70']"
+              ></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-2 flex items-center space-x-3">
+          <button
+            type="button"
+            @click="showOrderCardModal = false"
+            class="flex-1 bg-white/10 hover:bg-white/15 text-slate-300 font-bold py-2.5 rounded-xl text-xs transition-colors"
+          >
+            Batal
+          </button>
+          <button
+            type="button"
+            @click="handleOrderCard"
+            class="flex-1 bg-white hover:bg-slate-100 text-slate-950 font-black py-2.5 rounded-xl text-xs shadow-md transition-transform active:scale-95"
+          >
+            Pesan Kartu
+          </button>
+        </div>
+      </v-card>
+    </v-dialog>
 
     <!-- Global Toast Alert -->
     <div
