@@ -1,8 +1,11 @@
-.PHONY: all build run seed test test-cover vet clean
+.PHONY: all build build-web run seed test test-cover vet clean
 
 all: build
 
-build:
+build-web:
+	cd web && npm run build
+
+build: build-web
 	go build -ldflags="-s -w" -o bin/flowledger.exe ./cmd/flowledger
 
 run:

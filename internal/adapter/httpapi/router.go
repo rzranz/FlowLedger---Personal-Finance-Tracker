@@ -17,6 +17,7 @@ type RouterConfig struct {
 	BudgetUsecase   *usecase.BudgetUsecase
 	ReportUsecase   *usecase.ReportUsecase
 	IdempotencyRepo *sqlite.IdempotencyRepository
+	WebHandler      http.Handler
 }
 
 // Middleware is a standard HTTP middleware type.
@@ -65,6 +66,11 @@ func NewRouter(cfg RouterConfig) http.Handler {
 
 	// Analytics report
 	mux.HandleFunc("GET /api/v1/reports/monthly", reportHandler.Monthly)
+
+	// Embedded Web SPA Handler (fallback for UI routes)
+	if cfg.WebHandler != nil {
+		mux.Handle("/", cfg.WebHandler)
+	}
 
 	// Build global middleware chain
 	globalMiddlewares := []Middleware{

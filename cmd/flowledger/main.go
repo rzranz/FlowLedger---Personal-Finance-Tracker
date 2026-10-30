@@ -15,6 +15,7 @@ import (
 	"flowledger/internal/adapter/httpapi"
 	"flowledger/internal/adapter/sqlite"
 	"flowledger/internal/usecase"
+	"flowledger/web"
 )
 
 func main() {
@@ -108,6 +109,7 @@ func run() error {
 		BudgetUsecase:   budgetUsecase,
 		ReportUsecase:   reportUsecase,
 		IdempotencyRepo: idempotencyRepo,
+		WebHandler:      web.Handler(),
 	})
 
 	// 6. Hardened HTTP server configuration
