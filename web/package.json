@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "lucide-vue-next": "^0.475.0",
-    "vue": "^3.5.13"
+    "vue": "^3.5.13",
+    "vuetify": "^4.3.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",
@@ -23,4 +24,3 @@
     "vue-tsc": "^2.2.0"
   }
 }
-
