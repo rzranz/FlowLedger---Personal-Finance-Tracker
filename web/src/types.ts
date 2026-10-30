@@ -92,57 +92,73 @@ export interface CardMethodInfo {
   id: PaymentMethod
   name: string
   shortName: string
+  cardNumber: string
   icon: string
   color: string
+  glowColor: string
   gradient: string
+  cardBg: string
   border: string
-  text: string
+  textColor: string
   badgeBg: string
+  isFrozen?: boolean
 }
 
 export const PAYMENT_METHODS: CardMethodInfo[] = [
   {
     id: 'qris',
-    name: 'QRIS / E-Wallet',
+    name: 'QRIS Digital Card',
     shortName: 'QRIS',
+    cardNumber: '•••• 7642',
     icon: '📱',
-    color: '#10b981',
-    gradient: 'from-emerald-400 via-teal-400 to-cyan-500',
-    border: 'border-emerald-300',
-    text: 'text-emerald-400',
-    badgeBg: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+    color: '#FACC15',
+    glowColor: 'rgba(250, 204, 21, 0.45)',
+    gradient: 'from-[#FDE047] via-[#FACC15] to-[#EAB308]',
+    cardBg: 'bg-[#FACC15]',
+    border: 'border-yellow-200/40',
+    textColor: 'text-slate-950',
+    badgeBg: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
   },
   {
     id: 'cash',
-    name: 'Uang Tunai',
+    name: 'Cash / Tunai Wallet',
     shortName: 'Cash',
+    cardNumber: '•••• 5123',
     icon: '💵',
-    color: '#f59e0b',
-    gradient: 'from-amber-400 via-yellow-400 to-orange-500',
-    border: 'border-amber-300',
-    text: 'text-amber-400',
-    badgeBg: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+    color: '#2DD4BF',
+    glowColor: 'rgba(45, 212, 191, 0.45)',
+    gradient: 'from-[#5EEAD4] via-[#2DD4BF] to-[#0D9488]',
+    cardBg: 'bg-[#2DD4BF]',
+    border: 'border-teal-200/40',
+    textColor: 'text-slate-950',
+    badgeBg: 'bg-teal-500/20 text-teal-300 border-teal-500/30',
   },
   {
     id: 'atm',
-    name: 'Kartu Debit / ATM',
+    name: 'Debit / ATM Card',
     shortName: 'ATM',
+    cardNumber: '•••• 3413',
     icon: '💳',
-    color: '#06b6d4',
-    gradient: 'from-cyan-400 via-sky-500 to-blue-600',
-    border: 'border-cyan-300',
-    text: 'text-cyan-400',
-    badgeBg: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
+    color: '#38BDF8',
+    glowColor: 'rgba(56, 189, 248, 0.45)',
+    gradient: 'from-[#38BDF8] via-[#0EA5E9] to-[#0284C7]',
+    cardBg: 'bg-[#0EA5E9]',
+    border: 'border-sky-200/40',
+    textColor: 'text-white',
+    badgeBg: 'bg-sky-500/20 text-sky-300 border-sky-500/30',
   },
   {
     id: 'transfer',
-    name: 'Transfer Bank',
+    name: 'Bank Transfer Vault',
     shortName: 'Transfer',
+    cardNumber: '•••• 9021',
     icon: '🏦',
-    color: '#8b5cf6',
-    gradient: 'from-violet-400 via-purple-500 to-indigo-600',
-    border: 'border-purple-300',
-    text: 'text-purple-400',
+    color: '#A855F7',
+    glowColor: 'rgba(168, 85, 247, 0.45)',
+    gradient: 'from-[#C084FC] via-[#A855F7] to-[#7E22CE]',
+    cardBg: 'bg-[#A855F7]',
+    border: 'border-purple-200/40',
+    textColor: 'text-white',
     badgeBg: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
   },
 ]
