@@ -88,12 +88,14 @@ export function getCurrentMonth(): string {
 
 export type PaymentMethod = 'all' | 'qris' | 'cash' | 'atm' | 'transfer'
 
+export type PaymentIconType = 'qr' | 'cash' | 'card' | 'bank'
+
 export interface CardMethodInfo {
   id: PaymentMethod
   name: string
   shortName: string
   cardNumber: string
-  icon: string
+  iconType: PaymentIconType
   color: string
   glowColor: string
   gradient: string
@@ -110,9 +112,9 @@ export const PAYMENT_METHODS: CardMethodInfo[] = [
     name: 'QRIS Digital Card',
     shortName: 'QRIS',
     cardNumber: '•••• 7642',
-    icon: '📱',
+    iconType: 'qr',
     color: '#FACC15',
-    glowColor: 'rgba(250, 204, 21, 0.45)',
+    glowColor: 'rgba(250, 204, 21, 0.42)',
     gradient: 'from-[#FDE047] via-[#FACC15] to-[#EAB308]',
     cardBg: 'bg-[#FACC15]',
     border: 'border-yellow-200/40',
@@ -124,9 +126,9 @@ export const PAYMENT_METHODS: CardMethodInfo[] = [
     name: 'Cash / Tunai Wallet',
     shortName: 'Cash',
     cardNumber: '•••• 5123',
-    icon: '💵',
+    iconType: 'cash',
     color: '#2DD4BF',
-    glowColor: 'rgba(45, 212, 191, 0.45)',
+    glowColor: 'rgba(45, 212, 191, 0.42)',
     gradient: 'from-[#5EEAD4] via-[#2DD4BF] to-[#0D9488]',
     cardBg: 'bg-[#2DD4BF]',
     border: 'border-teal-200/40',
@@ -138,9 +140,9 @@ export const PAYMENT_METHODS: CardMethodInfo[] = [
     name: 'Debit / ATM Card',
     shortName: 'ATM',
     cardNumber: '•••• 3413',
-    icon: '💳',
+    iconType: 'card',
     color: '#38BDF8',
-    glowColor: 'rgba(56, 189, 248, 0.45)',
+    glowColor: 'rgba(56, 189, 248, 0.42)',
     gradient: 'from-[#38BDF8] via-[#0EA5E9] to-[#0284C7]',
     cardBg: 'bg-[#0EA5E9]',
     border: 'border-sky-200/40',
@@ -152,9 +154,9 @@ export const PAYMENT_METHODS: CardMethodInfo[] = [
     name: 'Bank Transfer Vault',
     shortName: 'Transfer',
     cardNumber: '•••• 9021',
-    icon: '🏦',
+    iconType: 'bank',
     color: '#A855F7',
-    glowColor: 'rgba(168, 85, 247, 0.45)',
+    glowColor: 'rgba(168, 85, 247, 0.42)',
     gradient: 'from-[#C084FC] via-[#A855F7] to-[#7E22CE]',
     cardBg: 'bg-[#A855F7]',
     border: 'border-purple-200/40',
