@@ -71,84 +71,90 @@ async function handleSave() {
 <template>
   <div
     v-if="isOpen"
-    class="fixed inset-0 z-50 overflow-y-auto bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4"
+    class="fixed inset-0 z-50 overflow-y-auto bg-slate-950/70 backdrop-blur-md flex items-center justify-center p-4"
     @click.self="emit('close')"
   >
-    <div class="bg-white rounded-2xl shadow-xl border border-slate-200 max-w-md w-full overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-      <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-        <h3 class="text-base font-bold text-slate-900">Pasang Batas Anggaran (Budget)</h3>
-        <button @click="emit('close')" class="text-slate-400 hover:text-slate-600 p-1">✕</button>
+    <div class="bg-[#0f131c] text-white rounded-3xl shadow-2xl border border-white/10 max-w-md w-full overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <div class="px-6 py-4 border-b border-white/10 flex items-center justify-between">
+        <div class="flex items-center space-x-2.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+          <h3 class="text-base font-extrabold text-white tracking-tight">Atur Limit Anggaran</h3>
+        </div>
+        <button @click="emit('close')" class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-white/10">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
       </div>
 
-      <form @submit.prevent="handleSave" class="p-6 space-y-4">
-        <div v-if="errorMessage" class="bg-rose-50 border border-rose-200 text-rose-700 text-sm px-4 py-3 rounded-xl">
+      <form @submit.prevent="handleSave" class="p-6 space-y-5">
+        <div v-if="errorMessage" class="bg-rose-500/15 border border-rose-500/30 text-rose-200 text-xs px-4 py-3 rounded-xl">
           {{ errorMessage }}
         </div>
 
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Bulan</label>
+          <label class="block text-[11px] font-mono font-bold uppercase tracking-widest text-slate-400 mb-1.5">Periode Bulan</label>
           <input
             v-model="month"
             type="month"
-            class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm font-medium bg-white focus:ring-2 focus:ring-emerald-500"
+            class="w-full px-4 py-3 bg-[#161c2a] border border-white/15 rounded-xl text-sm font-semibold text-white focus:outline-none focus:border-emerald-400"
           />
         </div>
 
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+          <label class="block text-[11px] font-mono font-bold uppercase tracking-widest text-slate-400 mb-1.5">
             Kategori Pengeluaran
           </label>
           <select
             v-model="categoryId"
-            class="w-full px-3.5 py-2.5 border border-slate-300 rounded-xl text-sm font-medium bg-white focus:ring-2 focus:ring-emerald-500"
+            class="w-full px-4 py-3 bg-[#161c2a] border border-white/15 rounded-xl text-sm font-semibold text-white focus:outline-none focus:border-emerald-400"
           >
-            <option value="" disabled>-- Pilih Kategori --</option>
-            <option v-for="cat in expenseCategories" :key="cat.id" :value="cat.id">
+            <option value="" disabled class="bg-slate-900 text-slate-400">-- Pilih Kategori --</option>
+            <option v-for="cat in expenseCategories" :key="cat.id" :value="cat.id" class="bg-slate-900 text-white">
               {{ cat.name }}
             </option>
           </select>
         </div>
 
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
-            Batas Maksimal Bulanan (Limit IDR)
+          <label class="block text-[11px] font-mono font-bold uppercase tracking-widest text-slate-400 mb-1.5">
+            Batas Maksimal Bulanan (IDR)
           </label>
-          <div class="relative rounded-xl shadow-sm">
+          <div class="relative rounded-xl">
             <input
               type="text"
               inputmode="numeric"
               :value="rawLimit ? new Intl.NumberFormat('id-ID').format(rawLimit) : ''"
               @input="onLimitInput"
               placeholder="Contoh: 1.500.000"
-              class="w-full text-xl font-bold font-mono px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500"
+              class="w-full text-xl font-black font-mono px-4 py-3 bg-[#161c2a] border border-white/15 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:border-emerald-400"
             />
-            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-xs font-semibold text-slate-400">
+            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-xs font-mono font-bold text-slate-400">
               IDR
             </div>
           </div>
-          <p v-if="rawLimit" class="text-xs text-emerald-600 mt-1 font-semibold">
-            Terbaca: {{ formatIDR(rawLimit) }}
+          <p v-if="rawLimit" class="text-xs text-emerald-400 mt-1.5 font-mono font-semibold">
+            Limit Aktif: {{ formatIDR(rawLimit) }}
           </p>
         </div>
 
-        <div class="pt-4 border-t border-slate-100 flex items-center justify-end space-x-3">
+        <div class="pt-3 border-t border-white/10 flex items-center justify-end space-x-3">
           <button
             type="button"
             @click="emit('close')"
-            class="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl"
+            class="tactile-btn px-4 py-2.5 text-xs font-bold text-slate-300 hover:text-white bg-white/[0.06] hover:bg-white/10 rounded-xl"
           >
             Batal
           </button>
           <button
             type="submit"
             :disabled="isSubmitting"
-            class="px-5 py-2 text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 rounded-xl shadow-sm"
+            class="tactile-btn px-5 py-2.5 text-xs font-black text-slate-950 bg-emerald-400 hover:bg-emerald-300 disabled:opacity-50 rounded-xl shadow-md"
           >
-            {{ isSubmitting ? 'Menyimpan...' : 'Simpan Anggaran' }}
+            {{ isSubmitting ? 'Menyimpan...' : 'Simpan Limit' }}
           </button>
         </div>
       </form>
     </div>
   </div>
 </template>
-
